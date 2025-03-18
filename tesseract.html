@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesseract Backend Test</title>
+</head>
+<body>
+    <input type="file" id="fileInput">
+    <button id="uploadBtn">Upload</button>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('파일을 선택하세요!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch("http://localhost:8080/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+                document.getElementById("output").innerText = result.text;
+            } catch (error) {
+                console.error("Error:", error);
+                alert("OCR 처리 중 오류가 발생했습니다.");
+            }
+        });
+    </script>
+</body>
+</html>
